@@ -22,7 +22,7 @@ export function Rating({
           className={cn(
             px,
             i <= Math.round(value)
-              ? 'fill-primary text-primary'
+              ? 'fill-accent text-accent'
               : 'text-muted-foreground/35',
           )}
         />

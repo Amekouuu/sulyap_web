@@ -18,6 +18,10 @@ export function LTOShell() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <div
+        className="fixed inset-x-0 top-0 z-50 h-0.5 bg-accent"
+        aria-hidden="true"
+      />
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-4 px-4">
           <div className="flex items-baseline gap-2">
@@ -49,7 +53,7 @@ export function LTOShell() {
 
           <div className="ml-auto flex items-center gap-3">
             {lgu && (
-              <span className="hidden rounded-full bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary md:inline">
+              <span className="hidden rounded-full bg-accent/15 px-3 py-1 text-xs font-medium text-accent-foreground md:inline">
                 {lgu.name}
               </span>
             )}

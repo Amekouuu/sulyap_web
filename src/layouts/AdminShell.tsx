@@ -25,6 +25,10 @@ export function AdminShell() {
 
   return (
     <div className="flex min-h-screen">
+      <div
+        className="fixed inset-x-0 top-0 z-50 h-0.5 bg-primary"
+        aria-hidden="true"
+      />
       <aside className="hidden w-64 shrink-0 flex-col border-r bg-muted/40 lg:flex">
         <div className="px-6 py-5">
           <p className="font-display text-xl font-bold">Sulyap</p>

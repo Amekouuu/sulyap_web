@@ -57,7 +57,7 @@ export const SEED_DESTINATIONS: Destination[] = [
     submitted_by: 1,
     name: 'Sapang Uwak Lahar Canyons',
     description:
-      'Wind-cut channels through the lahar plain left by the 1991 Pinatubo eruption, reached on foot from the Aeta resettlement road above Sapang Uwak.',
+      'Wind-cut channels through the sage plain left by the 1991 Pinatubo eruption, reached on foot from the Aeta resettlement road above Sapang Uwak.',
     location: 'Sitio Tarukan, Barangay Sapang Uwak, Porac, Pampanga',
     latitude: 15.2312,
     longitude: 120.4478,

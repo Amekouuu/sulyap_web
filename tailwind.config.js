@@ -36,10 +36,10 @@ export default {
           foreground: 'hsl(var(--card-foreground))',
         },
         // Sulyap semantic palette - see Section 8 design direction
-        lantern: 'hsl(var(--lantern))',
-        candaba: 'hsl(var(--candaba))',
-        betis: 'hsl(var(--betis))',
-        lahar: 'hsl(var(--lahar))',
+        sun: 'hsl(var(--sun))',
+        forest: 'hsl(var(--forest))',
+        terracotta: 'hsl(var(--terracotta))',
+        sage: 'hsl(var(--sage))',
       },
       borderRadius: {
         lg: 'var(--radius)',

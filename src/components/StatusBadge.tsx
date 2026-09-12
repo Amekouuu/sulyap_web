@@ -41,8 +41,8 @@ function Chip({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-sm bg-secondary px-2 py-1',
-          'text-[11px] font-semibold uppercase tracking-wider text-secondary-foreground',
+          'inline-flex items-center gap-1.5 rounded-sm bg-primary px-2 py-1',
+          'text-[11px] font-semibold uppercase tracking-wider text-primary-foreground',
           className,
         )}
       >

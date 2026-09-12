@@ -10,6 +10,12 @@ import { NotFound } from './pages/NotFound'
 import { Home } from './pages/Home'
 import { Destinations } from './pages/Destinations'
 import { DestinationDetail } from './pages/DestinationDetail'
+import { About } from './pages/About'
+import { Contact } from './pages/Contact'
+import { Login } from './pages/Login'
+import { Signup } from './pages/Signup'
+import { MyReviews } from './pages/MyReviews'
+import { MyNominations } from './pages/MyNominations'
 
 const stub = (title: string, phase: string) => (
   <Placeholder title={title} phase={phase} />
@@ -32,8 +38,8 @@ export const router = createBrowserRouter([
           </RequireRole>
         ),
       },
-      { path: 'about', element: stub('About Sulyap', 'phase 5') },
-      { path: 'contact', element: stub('Contact', 'phase 5') },
+      { path: 'about', element: <About /> },
+      { path: 'contact', element: <Contact /> },
       {
         path: 'me',
         element: (
@@ -42,8 +48,8 @@ export const router = createBrowserRouter([
           </RequireRole>
         ),
         children: [
-          { path: 'reviews', element: stub('My Reviews', 'phase 5') },
-          { path: 'nominations', element: stub('My Nominations', 'phase 5') },
+          { path: 'reviews', element: <MyReviews /> },
+          { path: 'nominations', element: <MyNominations /> },
         ],
       },
       { path: '*', element: <NotFound /> },
@@ -52,8 +58,8 @@ export const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [
-      { path: 'login', element: stub('Log in', 'phase 5') },
-      { path: 'signup', element: stub('Sign up', 'phase 5') },
+      { path: 'login', element: <Login /> },
+      { path: 'signup', element: <Signup /> },
     ],
   },
   {

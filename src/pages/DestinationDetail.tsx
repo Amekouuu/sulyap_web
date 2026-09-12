@@ -76,7 +76,7 @@ export function DestinationDetail() {
       </header>
 
       {unverified && (
-        <p className="mt-6 border-l-2 border-lahar py-2 pl-4 text-sm text-muted-foreground">
+        <p className="mt-6 border-l-2 border-sage py-2 pl-4 text-sm text-muted-foreground">
           This listing has passed spam screening but the tourism officer for{' '}
           {d.jurisdiction.name} has not yet checked it against the
           lesser-known criteria. Details may be incomplete.

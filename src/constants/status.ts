@@ -22,16 +22,16 @@ export type Tone = 'neutral' | 'pending' | 'positive' | 'attention' | 'closed'
  */
 export const TONE_TEXT: Record<Tone, string> = {
   neutral: 'text-muted-foreground',
-  pending: 'text-lahar',
-  positive: 'text-secondary',
+  pending: 'text-sage',
+  positive: 'text-forest',
   attention: 'text-destructive',
   closed: 'text-muted-foreground',
 }
 
 export const TONE_DOT: Record<Tone, string> = {
   neutral: 'bg-muted-foreground/40',
-  pending: 'bg-lahar',
-  positive: 'bg-secondary',
+  pending: 'bg-sage',
+  positive: 'bg-forest',
   attention: 'bg-destructive',
   closed: 'bg-muted-foreground/30',
 }
