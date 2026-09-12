@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Sulyap palette - Section 8 design direction.
+  Grounded in Pampanga materials: the Giant Lantern of San Fernando (amber),
+  the Candaba wetlands (teal), Betis Church brick, and Pinatubo lahar.
+  Every token is declared here in the bare :root so nothing depends on a
+  media query to exist.
+*/
+@layer base {
+  :root {
+    --background: 36 33% 97%;         /* Limestone #FAF8F5 */
+    --foreground: 36 10% 10%;         /* Ink #1C1A17 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 36 10% 10%;
+
+    --primary: 34 80% 43%;            /* Lantern Amber #C67A16 */
+    --primary-foreground: 36 33% 97%;
+
+    --secondary: 176 51% 25%;         /* Candaba Teal #1F5F5B */
+    --secondary-foreground: 36 33% 97%;
+
+    --muted: 36 16% 93%;
+    --muted-foreground: 26 11% 39%;   /* Lahar Grey #6E6259 */
+
+    --accent: 36 20% 90%;
+    --accent-foreground: 36 10% 10%;
+
+    --destructive: 14 62% 39%;        /* Betis Brick #A34426 */
+    --destructive-foreground: 36 33% 97%;
+
+    --border: 36 14% 87%;
+    --input: 36 14% 87%;
+    --ring: 34 80% 43%;
+
+    --lantern: 34 80% 43%;
+    --candaba: 176 51% 25%;
+    --betis: 14 62% 39%;
+    --lahar: 26 11% 39%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 36 10% 8%;
+    --foreground: 36 20% 94%;
+
+    --card: 36 9% 12%;
+    --card-foreground: 36 20% 94%;
+
+    --primary: 34 74% 56%;
+    --primary-foreground: 36 10% 8%;
+
+    --secondary: 176 38% 40%;
+    --secondary-foreground: 36 10% 8%;
+
+    --muted: 36 8% 17%;
+    --muted-foreground: 30 9% 66%;
+
+    --accent: 36 8% 20%;
+    --accent-foreground: 36 20% 94%;
+
+    --destructive: 14 58% 54%;
+    --destructive-foreground: 36 10% 8%;
+
+    --border: 36 8% 22%;
+    --input: 36 8% 22%;
+    --ring: 34 74% 56%;
+
+    --lantern: 34 74% 56%;
+    --candaba: 176 38% 40%;
+    --betis: 14 58% 54%;
+    --lahar: 30 9% 66%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04';
+  }
+  h1, h2, h3 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+  /* Keyboard focus must always be visible - WCAG 2.2 SC 2.4.11 */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* Motion stance: restrained, and fully disabled on request. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
