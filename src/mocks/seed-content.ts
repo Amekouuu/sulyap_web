@@ -139,3 +139,59 @@ export const SEED_CRITERIA_ASSESSMENTS: DestinationCriterion[] = [
     is_draft: false,
   },
 ]
+
+/* Porac Highlands: mid-assessment, saved as a draft by the Porac officer. */
+SEED_CRITERIA_ASSESSMENTS.push(
+  {
+    destination_id: 3,
+    criterion_id: 1,
+    assessment_status: 'met',
+    notes: 'No pin found for the canyons themselves.',
+    evidence: 'Google Maps and TripAdvisor searched for "Sapang Uwak"',
+    observed_review_count: 0,
+    observed_at: '2026-09-07',
+    assessed_by: 215, // Porac
+    assessed_at: ts('2026-09-08'),
+    is_draft: true,
+  },
+  {
+    destination_id: 3,
+    criterion_id: 2,
+    assessment_status: 'met',
+    notes: 'Not in ACTOP or DOT Region III material.',
+    evidence: 'ACTOP Facebook page, DOT Region III listings',
+    observed_review_count: null,
+    observed_at: null,
+    assessed_by: 215, // Porac
+    assessed_at: ts('2026-09-08'),
+    is_draft: true,
+  },
+  {
+    destination_id: 3,
+    criterion_id: 3,
+    assessment_status: 'not_assessed',
+    notes: '',
+    evidence: '',
+    observed_review_count: null,
+    observed_at: null,
+    assessed_by: null,
+    assessed_at: null,
+    is_draft: true,
+  },
+)
+
+/* Bangkung Malapad is endorsed, so by definition it passed all three. */
+SEED_CRITERIA_ASSESSMENTS.push(
+  ...[1, 2, 3].map((criterion_id) => ({
+    destination_id: 2,
+    criterion_id,
+    assessment_status: 'met' as const,
+    notes: 'Verified with the Sasmuan tourism office.',
+    evidence: 'Google Maps, ACTOP page, and LOVE Pampanga archive searched',
+    observed_review_count: criterion_id === 1 ? 1 : null,
+    observed_at: criterion_id === 1 ? '2026-08-30' : null,
+    assessed_by: 221,
+    assessed_at: ts('2026-09-02'),
+    is_draft: false,
+  })),
+)

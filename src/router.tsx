@@ -16,6 +16,18 @@ import { Login } from './pages/Login'
 import { Signup } from './pages/Signup'
 import { MyReviews } from './pages/MyReviews'
 import { MyNominations } from './pages/MyNominations'
+import { AdminDashboard } from './pages/admin/Dashboard'
+import { AdminDestinations } from './pages/admin/AdminDestinations'
+import { ScreeningView } from './pages/admin/ScreeningView'
+import { CommunityContent } from './pages/admin/CommunityContent'
+import { AdminReports } from './pages/admin/AdminReports'
+import { ReportDetail } from './pages/admin/ReportDetail'
+import { AdminUsers } from './pages/admin/AdminUsers'
+import { UserDetail } from './pages/admin/UserDetail'
+import { Verification } from './pages/admin/Verification'
+import { AssignedSubmissions } from './pages/lto/AssignedSubmissions'
+import { ReviewSubmission } from './pages/lto/ReviewSubmission'
+import { EndorsedSubmissions } from './pages/lto/EndorsedSubmissions'
 
 const stub = (title: string, phase: string) => (
   <Placeholder title={title} phase={phase} />
@@ -34,7 +46,7 @@ export const router = createBrowserRouter([
         path: 'nominate',
         element: (
           <RequireRole roles={['registered_user']}>
-            {stub('Nominate a Destination', 'phase 5')}
+            {stub('Nominate a Destination', 'phase 6b')}
           </RequireRole>
         ),
       },
@@ -70,19 +82,15 @@ export const router = createBrowserRouter([
       </RequireRole>
     ),
     children: [
-      { index: true, element: stub('Dashboard', 'phase 6') },
-      { path: 'destinations', element: stub('Destinations', 'phase 6') },
-      {
-        path: 'destinations/:id',
-        // Awaiting the owner's mockup - VERIFY / RETURN / REJECT, read-only content.
-        element: stub('Screening View', 'a pending mockup'),
-      },
-      { path: 'community', element: stub('Community Content', 'phase 6') },
-      { path: 'reports', element: stub('Reports', 'phase 6') },
-      { path: 'reports/:id', element: stub('Report Detail', 'phase 6') },
-      { path: 'users', element: stub('Users', 'phase 6') },
-      { path: 'users/:id', element: stub('User Detail', 'phase 6') },
-      { path: 'verification', element: stub('Verification Log', 'phase 6') },
+      { index: true, element: <AdminDashboard /> },
+      { path: 'destinations', element: <AdminDestinations /> },
+      { path: 'destinations/:id', element: <ScreeningView /> },
+      { path: 'community', element: <CommunityContent /> },
+      { path: 'reports', element: <AdminReports /> },
+      { path: 'reports/:id', element: <ReportDetail /> },
+      { path: 'users', element: <AdminUsers /> },
+      { path: 'users/:id', element: <UserDetail /> },
+      { path: 'verification', element: <Verification /> },
     ],
   },
   {
@@ -93,13 +101,10 @@ export const router = createBrowserRouter([
       </RequireRole>
     ),
     children: [
-      { index: true, element: stub('Assigned Submissions', 'phase 7') },
-      { path: 'submissions', element: stub('Assigned Submissions', 'phase 7') },
-      {
-        path: 'submissions/:id',
-        element: stub('Review Submission', 'phase 7'),
-      },
-      { path: 'endorsed', element: stub('Endorsed', 'phase 7') },
+      { index: true, element: <AssignedSubmissions /> },
+      { path: 'submissions', element: <AssignedSubmissions /> },
+      { path: 'submissions/:id', element: <ReviewSubmission /> },
+      { path: 'endorsed', element: <EndorsedSubmissions /> },
     ],
   },
 ])

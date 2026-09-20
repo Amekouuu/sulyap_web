@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 const NAV = [
   { to: '/lto/submissions', label: 'Assigned Submissions', end: true },
-  { to: '/lto/endorsed', label: 'Endorsed' },
+  { to: '/lto/endorsed', label: 'Decided' },
 ]
 
 /** Own header, no sidebar - matches the Local Tourism Officer Portal wireframes. */

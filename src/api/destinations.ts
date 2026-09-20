@@ -7,6 +7,7 @@ import { db, nowIso, persist } from '@/mocks/store'
 import { CATEGORY_BY_ID } from '@/constants/categories'
 import { JURISDICTION_BY_ID } from '@/constants/jurisdictions'
 import { CONTENT_MODERATION, PUBLICLY_VISIBLE_STATUSES } from '@/constants/status'
+import { isInSeason } from '@/lib/months'
 import { respond } from './client'
 
 /** Join a destination row with everything a card or detail page needs. */
@@ -23,8 +24,21 @@ function toView(d: Destination): DestinationView {
   )
   const ratings = reviews.map((r) => r.rating)
 
+  // Recency comes from the endorsement log, per paper Section 7.
+  const endorsed_at =
+    db.endorsementLogs
+      .filter(
+        (l) =>
+          l.destination_id === d.destination_id &&
+          l.endorsement_status === 'endorsed',
+      )
+      .map((l) => l.created_at)
+      .sort()
+      .pop() ?? null
+
   return {
     ...d,
+    endorsed_at,
     jurisdiction: JURISDICTION_BY_ID.get(d.jurisdiction_id)!,
     categories: db.destinationCategories
       .filter((dc) => dc.destination_id === d.destination_id)
@@ -49,16 +63,29 @@ export interface BrowseParams {
 }
 
 /**
- * Inverted-engagement score. Lower engagement ranks higher.
- * Weights are provisional and flagged for approval (manifest D10).
+ * Multiplier applied when the current month falls inside the destination's
+ * active_months. Tunable - large enough to reorder visibly, small enough
+ * that it cannot swamp the engagement signal it sits on top of.
  */
-function leastExploredScore(d: DestinationView): number {
+const SEASONAL_BOOST = 1.25
+
+/**
+ * Score = (0.7 x Inverse Engagement) + (0.3 x Endorsement Recency),
+ * then multiplied by the seasonal boost. Matches the formula stated in the
+ * paper: the boost is a multiplier, not a third weighted factor, so the
+ * 70-30 split stays intact.
+ *
+ * A newly endorsed destination with no engagement scores as fully
+ * under-engaged rather than being penalised for having no data yet.
+ */
+function leastExploredScore(d: DestinationView, month: number): number {
   const engagement = d.view_count + d.review_count * 5
   const inverse = 1 / (1 + engagement)
   const recency = d.endorsed_at
     ? 1 / (1 + (Date.now() - Date.parse(d.endorsed_at)) / 86_400_000)
     : 1
-  return inverse * 0.7 + recency * 0.3
+  const base = inverse * 0.7 + recency * 0.3
+  return isInSeason(d.active_months, month) ? base * SEASONAL_BOOST : base
 }
 
 export async function browseDestinations(
@@ -96,7 +123,10 @@ export async function browseDestinations(
   // Search defaults to relevance; browsing defaults to least explored.
   const mode = sort ?? (q ? 'relevance' : 'least_explored')
   if (mode === 'least_explored') {
-    rows.sort((a, b) => leastExploredScore(b) - leastExploredScore(a))
+    const month = new Date().getMonth() + 1
+    rows.sort(
+      (a, b) => leastExploredScore(b, month) - leastExploredScore(a, month),
+    )
   } else if (mode === 'recent') {
     rows.sort((a, b) => (b.endorsed_at ?? '').localeCompare(a.endorsed_at ?? ''))
   } else {

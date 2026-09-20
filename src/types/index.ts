@@ -6,6 +6,8 @@
 
 export type UserRole = 'registered_user' | 'administrator' | 'tourism_officer'
 export type AccountStatus = 'active' | 'suspended'
+/** Administrator review of the user's submitted ID. Gates submission rights. */
+export type AccountVerificationStatus = 'pending' | 'verified' | 'rejected'
 export type JurisdictionType = 'province' | 'city' | 'municipality'
 
 /** `draft` and `returned` are additions to the paper's original four states. */
@@ -38,6 +40,14 @@ export interface User {
   user_id: number
   full_name: string
   email: string
+  contact_number: string
+  /** Uploaded photo of a valid ID, reviewed by an administrator. */
+  id_document_url: string | null
+  account_verification_status: AccountVerificationStatus
+  /** Registration address - the Nearby Lesser-Known feature depends on it. */
+  home_address: string | null
+  /** Geocoded from home_address via OpenStreetMap Nominatim. */
+  address_coordinates: { lat: number; lng: number } | null
   role: UserRole
   /** Required for tourism_officer, null for every other role. */
   jurisdiction_id: number | null
@@ -69,11 +79,14 @@ export interface Destination {
   longitude: number
   entrance_fee: number | null
   best_time_to_visit: string
+  /**
+   * Months the destination is at its best, recorded by the officer at
+   * endorsement. Free-form by design - parsed in src/lib/months.ts.
+   */
+  active_months: string | null
   safety_reminders: string
   view_count: number
   workflow_status: DestinationWorkflowStatus
-  /** Written once at endorsement, never touched by edits. The ranking reads this. */
-  endorsed_at: string | null
   last_edited_by: number | null
   previous_workflow_status: DestinationWorkflowStatus | null
   created_at: string
@@ -154,6 +167,7 @@ export interface Report {
   reason: string
   report_status: ReportStatus
   resolved_by: number | null
+  resolved_at: string | null
   created_at: string
   updated_at: string
 }
@@ -166,4 +180,11 @@ export interface DestinationView extends Destination {
   gallery: DestinationImage[]
   review_count: number
   average_rating: number | null
+  /**
+   * Derived, not stored: the created_at of the most recent Endorsement_Logs
+   * row for this destination with status 'endorsed'. Keeping it on the log
+   * rather than the destination means a re-endorsement after an edit
+   * legitimately refreshes recency, because an officer had to re-review.
+   */
+  endorsed_at: string | null
 }

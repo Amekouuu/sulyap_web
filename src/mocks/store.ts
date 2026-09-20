@@ -45,7 +45,7 @@ export interface StoreShape {
   reports: Report[]
 }
 
-const STORAGE_KEY = 'sulyap.mock.v1'
+const STORAGE_KEY = 'sulyap.mock.v3'
 
 function seed(): StoreShape {
   return {

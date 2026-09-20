@@ -33,15 +33,24 @@ export const SEED_ENDORSEMENT_LOGS: EndorsementLog[] = [
   {
     endorsement_id: 1,
     destination_id: 1,
-    tourism_officer_id: 200,
+    tourism_officer_id: 206, // Candaba
     endorsement_status: 'endorsed',
     remarks: 'All three criteria met. Cooperative confirmed the entrance fee.',
     created_at: ts('2026-08-14'),
   },
   {
     endorsement_id: 2,
+    destination_id: 2,
+    tourism_officer_id: 221, // Sasmuan
+    endorsement_status: 'endorsed',
+    remarks:
+      'Verified with the Sasmuan fish port operators. Boat transfer confirmed.',
+    created_at: ts('2026-09-02'),
+  },
+  {
+    endorsement_id: 3,
     destination_id: 6,
-    tourism_officer_id: 200,
+    tourism_officer_id: 208, // Guagua
     endorsement_status: 'rejected',
     remarks:
       'Criterion 3 not met - the church is featured in existing travel media.',
@@ -59,6 +68,7 @@ export const SEED_REPORTS: Report[] = [
     reason: 'Spam - advertising an unrelated tour service.',
     report_status: 'resolved',
     resolved_by: 100,
+    resolved_at: ts('2026-09-08'),
     created_at: ts('2026-09-07'),
     updated_at: ts('2026-09-08'),
   },
@@ -71,6 +81,7 @@ export const SEED_REPORTS: Report[] = [
     reason: 'Coordinates point to the wrong side of the ridge.',
     report_status: 'pending',
     resolved_by: null,
+    resolved_at: null,
     created_at: ts('2026-09-10'),
     updated_at: ts('2026-09-10'),
   },
@@ -83,6 +94,7 @@ export const SEED_REPORTS: Report[] = [
     reason: 'Duplicate of an existing Arayat trailhead listing.',
     report_status: 'under_review',
     resolved_by: null,
+    resolved_at: null,
     created_at: ts('2026-09-11'),
     updated_at: ts('2026-09-11'),
   },

@@ -16,6 +16,6 @@ export async function listSwitchableAccounts(): Promise<User[]> {
   const admin = db.users.filter((u) => u.role === 'administrator')
   const officers = db.users
     .filter((u) => u.role === 'tourism_officer')
-    .slice(0, 3)
+    .filter((u) => [206, 215, 221, 208].includes(u.user_id))
   return respond([...residents.slice(0, 2), ...admin, ...officers])
 }

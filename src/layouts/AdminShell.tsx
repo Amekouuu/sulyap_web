@@ -17,7 +17,7 @@ const NAV = [
   { to: '/admin/community', label: 'Community Content', icon: MessageSquare },
   { to: '/admin/reports', label: 'Reports', icon: Flag },
   { to: '/admin/users', label: 'Users', icon: Users },
-  { to: '/admin/verification', label: 'Verification Log', icon: ClipboardCheck },
+  { to: '/admin/verification', label: 'Verification', icon: ClipboardCheck },
 ]
 
 export function AdminShell() {
