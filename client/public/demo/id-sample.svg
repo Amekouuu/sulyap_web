@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">
+  <rect width="640" height="400" rx="24" fill="#F3EFE6"/>
+  <rect x="24" y="24" width="592" height="56" rx="10" fill="#234638"/>
+  <text x="48" y="61" font-family="sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">SAMPLE GOVERNMENT ID</text>
+  <rect x="48" y="112" width="160" height="200" rx="12" fill="#D9E0DB"/>
+  <circle cx="128" cy="180" r="38" fill="#B9C4BD"/>
+  <path d="M68 300c10-50 110-50 120 0z" fill="#B9C4BD"/>
+  <g fill="#B9C4BD">
+    <rect x="240" y="124" width="300" height="20" rx="6"/>
+    <rect x="240" y="164" width="220" height="20" rx="6"/>
+    <rect x="240" y="204" width="260" height="20" rx="6"/>
+    <rect x="240" y="244" width="180" height="20" rx="6"/>
+  </g>
+  <text x="320" y="370" text-anchor="middle" font-family="sans-serif" font-size="20" fill="#C9653B">TEST DATA - NOT A REAL ID</text>
+</svg>

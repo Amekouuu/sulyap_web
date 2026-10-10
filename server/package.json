@@ -1,0 +1,32 @@
+{
+  "name": "sulyap-server",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Sulyap logic tier: Node.js + Express REST API",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "db:seed:demo": "node scripts/seed-demo.js",
+    "db:clear:demo": "node scripts/clear-demo.js",
+    "db:check": "node scripts/check-db.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.2.12"
+  }
+}
