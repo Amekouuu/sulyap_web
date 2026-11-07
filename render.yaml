@@ -1,0 +1,32 @@
+# Render Blueprint for the Sulyap API (server/). Secrets marked sync: false are typed in the
+# Render dashboard during setup and are never stored in this file.
+services:
+  - type: web
+    name: sulyap-api
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: server
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: '20'
+      - key: CLIENT_ORIGIN
+        value: https://sulyap-web.vercel.app
+      - key: APP_URL
+        value: https://sulyap-web.vercel.app
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
