@@ -28,10 +28,13 @@ export function query(text, params) {
 // Runs fn(client) inside BEGIN/COMMIT and rolls back if anything throws.
 export async function withTransaction(fn) {
   const client = await requirePool().connect();
+  // Work that must only happen once the data is saved (e-mails) is queued on client.afterCommit.
+  client.afterCommit = [];
   try {
     await client.query('BEGIN');
     const result = await fn(client);
     await client.query('COMMIT');
+    for (const task of client.afterCommit) task();
     return result;
   } catch (error) {
     await client.query('ROLLBACK');

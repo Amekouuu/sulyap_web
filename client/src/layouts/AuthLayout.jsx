@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Logo } from '@/components/Logo';
 import { SkipLink } from '@/components/shell/SkipLink';
-import { DevRoleSwitcher } from '@/components/DevRoleSwitcher';
 
 // Split screen from the mockup: photo on the left, form on the right.
 export function AuthLayout() {
@@ -32,7 +31,6 @@ export function AuthLayout() {
           </div>
         </div>
       </main>
-      <DevRoleSwitcher />
     </div>
   );
 }

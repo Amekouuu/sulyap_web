@@ -4,15 +4,44 @@ import { AuthLayout } from './layouts/AuthLayout';
 import { ContributionsLayout } from './layouts/ContributionsLayout';
 import { AdminShell } from './layouts/AdminShell';
 import { OfficerShell } from './layouts/OfficerShell';
-import { PlaceholderPage } from './pages/PlaceholderPage';
+import { GuestOnly, RequireRole } from './components/RequireRole';
 import { NotFound } from './pages/NotFound';
+import { HomePage } from './pages/public/HomePage';
+import { DestinationsPage } from './pages/public/DestinationsPage';
+import { DestinationPage } from './pages/public/DestinationPage';
+import { MapPage } from './pages/public/MapPage';
+import { NominatePage } from './pages/contribute/NominatePage';
+import { MyNominationsPage } from './pages/contribute/MyNominationsPage';
+import { MyReviewsPage } from './pages/contribute/MyReviewsPage';
+import { DashboardPage } from './pages/admin/DashboardPage';
+import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
+import { ScreeningPage } from './pages/admin/ScreeningPage';
+import { CommunityPage } from './pages/admin/CommunityPage';
+import { ReportsPage } from './pages/admin/ReportsPage';
+import { ReportDetailPage } from './pages/admin/ReportDetailPage';
+import { ScreeningListsPage } from './pages/admin/ScreeningListsPage';
+import {
+  OfficerReviewPage,
+  OfficerReviewedPage,
+  OfficerSubmissionsPage,
+} from './pages/officer/OfficerPages';
+import { LoginPage } from './pages/auth/LoginPage';
+import { SignupPage } from './pages/auth/SignupPage';
+import { CheckEmailPage } from './pages/auth/CheckEmailPage';
+import { VerifyEmailPage } from './pages/auth/VerifyEmailPage';
+import { UploadIdPage } from './pages/auth/UploadIdPage';
+import { AccountSettingsPage } from './pages/account/AccountSettingsPage';
+import { NotificationsPage } from './pages/account/NotificationsPage';
+import { UnsubscribePage } from './pages/account/UnsubscribePage';
+import { UsersPage } from './pages/admin/UsersPage';
+import { IdVerificationListPage } from './pages/admin/IdVerificationListPage';
+import { IdVerificationDetailPage } from './pages/admin/IdVerificationDetailPage';
 
-// Every page of the system. Pages not built yet show which phase builds them.
-const soon = (title, phase, note, options) => (
-  <PlaceholderPage title={title} phase={phase} note={note} {...options} />
+// Every page of the system.
+// RequireRole only hides pages; the API checks every request again.
+const registeredOnly = (element) => (
+  <RequireRole roles={['registered_user']}>{element}</RequireRole>
 );
-const inShell = { contained: false };
-const inContributions = { contained: false, showTitle: false };
 
 const devRoutes = import.meta.env.DEV
   ? [
@@ -23,6 +52,10 @@ const devRoutes = import.meta.env.DEV
             Component: m.ComponentGallery,
           })),
       },
+      {
+        path: 'dev/outbox',
+        lazy: () => import('./pages/dev/OutboxPage.jsx').then((m) => ({ Component: m.OutboxPage })),
+      },
     ]
   : [];
 
@@ -30,80 +63,44 @@ export const router = createBrowserRouter([
   {
     element: <PublicShell />,
     children: [
-      {
-        index: true,
-        element: soon('Home', 'B2', 'Recently endorsed destinations, search, and categories.'),
-      },
-      {
-        path: 'destinations',
-        element: soon('Destinations', 'B2', 'Search and filter endorsed destinations.'),
-      },
-      {
-        path: 'destinations/:destinationId',
-        element: soon(
-          'Destination',
-          'B2',
-          'Photos, details, reviews, map, and similar destinations.',
-        ),
-      },
-      {
-        path: 'map',
-        element: soon(
-          'Interactive Map',
-          'B2 and B6',
-          'Pampanga-only map, Nearby, and Similar Places.',
-        ),
-      },
-      {
-        path: 'nominate',
-        element: soon(
-          'Nominate a New Destination',
-          'B3',
-          'Nomination form with a map pin and photos.',
-        ),
-      },
-      {
-        path: 'nominate/:destinationId/edit',
-        element: soon('Edit Nomination', 'B3', 'Edit a draft or returned nomination.'),
-      },
+      { index: true, element: <HomePage /> },
+      { path: 'destinations', element: <DestinationsPage /> },
+      { path: 'destinations/:destinationId', element: <DestinationPage /> },
+      { path: 'map', element: <MapPage /> },
+      { path: 'nominate', element: registeredOnly(<NominatePage />) },
+      { path: 'nominate/:destinationId/edit', element: registeredOnly(<NominatePage />) },
       {
         path: 'contribute',
-        element: <ContributionsLayout />,
+        element: registeredOnly(<ContributionsLayout />),
         children: [
           { index: true, element: <Navigate to="reviews" replace /> },
-          {
-            path: 'reviews',
-            handle: { title: 'My Reviews' },
-            element: soon(
-              'My Reviews',
-              'B3',
-              'Your reviews and their moderation status.',
-              inContributions,
-            ),
-          },
+          { path: 'reviews', handle: { title: 'My Reviews' }, element: <MyReviewsPage /> },
           {
             path: 'nominations',
             handle: { title: 'My Nominations' },
-            element: soon(
-              'My Nominations',
-              'B3',
-              'Your nominations and where each one is.',
-              inContributions,
-            ),
+            element: <MyNominationsPage />,
           },
         ],
       },
       {
         path: 'account',
-        element: soon('Account Settings', 'B1', 'Valid ID upload and the newsletter option.'),
+        element: (
+          <RequireRole>
+            <AccountSettingsPage />
+          </RequireRole>
+        ),
       },
       {
         path: 'notifications',
-        element: soon('Notifications', 'B7', 'Updates on your account and submissions.'),
+        element: (
+          <RequireRole>
+            <NotificationsPage />
+          </RequireRole>
+        ),
       },
       {
         path: 'newsletter/unsubscribe',
-        element: soon('Newsletter', 'B7', 'One-click unsubscribe.'),
+        element: <UnsubscribePage />,
       },
       ...devRoutes,
     ],
@@ -111,107 +108,68 @@ export const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [
-      { path: 'login', element: soon('Log in', 'B1', 'E-mail and password login.', inShell) },
-      { path: 'signup', element: soon('Create an account', 'B1', 'Registration form.', inShell) },
       {
-        path: 'check-email',
-        element: soon(
-          'Check your inbox',
-          'B1',
-          'Sent after sign-up, with a resend button.',
-          inShell,
+        path: 'login',
+        element: (
+          <GuestOnly>
+            <LoginPage />
+          </GuestOnly>
         ),
       },
       {
-        path: 'verify-email',
-        element: soon(
-          'Verify your e-mail',
-          'B1',
-          'Landing page for the verification link.',
-          inShell,
+        path: 'signup',
+        element: (
+          <GuestOnly>
+            <SignupPage />
+          </GuestOnly>
         ),
       },
-      {
-        path: 'upload-id',
-        element: soon('Upload your valid ID', 'B1', 'ID type and front photo.', inShell),
-      },
+      { path: 'check-email', element: <CheckEmailPage /> },
+      { path: 'verify-email', element: <VerifyEmailPage /> },
+      { path: 'upload-id', element: registeredOnly(<UploadIdPage />) },
     ],
   },
   {
     path: 'admin',
-    element: <AdminShell />,
+    element: (
+      <RequireRole roles={['administrator']}>
+        <AdminShell />
+      </RequireRole>
+    ),
     children: [
-      {
-        index: true,
-        element: soon('Dashboard', 'B4', 'Counts, pending actions, and recent activity.', inShell),
-      },
-      {
-        path: 'destinations',
-        element: soon('Destinations', 'B4', 'Screen nominations and route them.', inShell),
-      },
-      {
-        path: 'destinations/:destinationId',
-        element: soon('Screening', 'B4', 'Read-only nomination with screening decision.', inShell),
-      },
-      {
-        path: 'community',
-        element: soon('Community Content', 'B4', 'Approve or remove reviews and photos.', inShell),
-      },
-      {
-        path: 'reports',
-        element: soon('Reports', 'B4', 'Reports from registered users.', inShell),
-      },
-      {
-        path: 'reports/:reportId',
-        element: soon('Report', 'B4', 'Resolve or dismiss a report.', inShell),
-      },
-      {
-        path: 'users',
-        element: soon('Users', 'B1', 'Accounts, suspension, and officer jurisdictions.', inShell),
-      },
-      {
-        path: 'id-verification',
-        element: soon('ID Verification', 'B1', 'Pending ID checks.', inShell),
-      },
-      {
-        path: 'id-verification/:userId',
-        element: soon('ID Verification', 'B1', 'Verify or reject one ID.', inShell),
-      },
-      {
-        path: 'screening-lists',
-        element: soon('Screening Lists', 'B4', 'Prohibited terms and known destinations.', inShell),
-      },
+      { index: true, element: <DashboardPage /> },
+      { path: 'destinations', element: <AdminDestinationsPage /> },
+      { path: 'destinations/:destinationId', element: <ScreeningPage /> },
+      { path: 'community', element: <CommunityPage /> },
+      { path: 'reports', element: <ReportsPage /> },
+      { path: 'reports/:reportId', element: <ReportDetailPage /> },
+      { path: 'users', element: <UsersPage /> },
+      { path: 'id-verification', element: <IdVerificationListPage /> },
+      { path: 'id-verification/:userId', element: <IdVerificationDetailPage /> },
+      { path: 'screening-lists', element: <ScreeningListsPage /> },
       {
         path: 'notifications',
-        element: soon('Notifications', 'B7', 'New nominations and other updates.', inShell),
+        element: <NotificationsPage contained={false} />,
       },
+      { path: 'account', element: <AccountSettingsPage contained={false} /> },
     ],
   },
   {
     path: 'officer',
-    element: <OfficerShell />,
+    element: (
+      <RequireRole roles={['tourism_officer']}>
+        <OfficerShell />
+      </RequireRole>
+    ),
     children: [
-      {
-        index: true,
-        element: soon(
-          'Assigned Submissions',
-          'B5',
-          'Nominations routed to your jurisdictions.',
-          inShell,
-        ),
-      },
-      {
-        path: 'submissions/:destinationId',
-        element: soon('Review Submission', 'B5', 'Criteria checklist and decision.', inShell),
-      },
-      {
-        path: 'reviewed',
-        element: soon('Reviewed Submissions', 'B5', 'Submissions you have decided on.', inShell),
-      },
+      { index: true, element: <OfficerSubmissionsPage /> },
+      { path: 'submissions/:destinationId', element: <OfficerReviewPage /> },
+      { path: 'reviewed', element: <OfficerReviewedPage /> },
       {
         path: 'notifications',
-        element: soon('Notifications', 'B7', 'Nominations routed to you.', inShell),
+        element: <NotificationsPage contained={false} />,
       },
+      { path: 'account', element: <AccountSettingsPage contained={false} /> },
     ],
   },
   { path: '*', element: <PublicShell />, children: [{ path: '*', element: <NotFound /> }] },

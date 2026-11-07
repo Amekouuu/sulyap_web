@@ -31,3 +31,11 @@ export function formatKm(km) {
 export function plural(count, one, many = `${one}s`) {
   return `${count} ${count === 1 ? one : many}`;
 }
+
+// "+639171234567" -> "0917 123 4567"
+export function formatPhone(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (digits.length < 10) return value || '';
+  const local = `0${digits.slice(-10)}`;
+  return `${local.slice(0, 4)} ${local.slice(4, 7)} ${local.slice(7)}`;
+}

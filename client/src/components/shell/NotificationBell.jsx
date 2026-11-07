@@ -1,9 +1,25 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useSession } from '@/session/SessionContext';
+import { api } from '@/lib/api';
 
-// Bell with the unread count. The list itself arrives in Phase B7.
+const POLL_MS = 60 * 1000;
+
+// Bell with the unread count, refreshed every minute while the tab is visible.
 export function NotificationBell({ to, unread = 0, className }) {
+  const { setUser } = useSession();
+  useEffect(() => {
+    // A failed check (offline, server restarting) keeps the current session as it is.
+    const id = setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      api('/auth/me')
+        .then((data) => data.user && setUser(data.user))
+        .catch(() => {});
+    }, POLL_MS);
+    return () => clearInterval(id);
+  }, [setUser]);
   const label = unread ? `Notifications, ${unread} unread` : 'Notifications';
   return (
     <Link

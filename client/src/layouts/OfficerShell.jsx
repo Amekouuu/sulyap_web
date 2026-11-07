@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LogOut, MapPinned } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Avatar } from '@/components/ui/Avatar';
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { NotificationBell } from '@/components/shell/NotificationBell';
 import { SkipLink } from '@/components/shell/SkipLink';
 import { SlimFooter } from '@/components/shell/SlimFooter';
-import { DevRoleSwitcher } from '@/components/DevRoleSwitcher';
 import { useSession } from '@/session/SessionContext';
 import { cn } from '@/lib/cn';
 
@@ -23,11 +22,11 @@ function jurisdictionLabel(jurisdictions) {
 }
 
 export function OfficerShell() {
-  const { user, setPreviewRole } = useSession();
+  const { user, logout } = useSession();
   const navigate = useNavigate();
 
-  function logOut() {
-    setPreviewRole('guest');
+  async function logOut() {
+    await logout();
     navigate('/login');
   }
 
@@ -68,7 +67,9 @@ export function OfficerShell() {
               {jurisdictionLabel(user?.jurisdictions)}
             </span>
             <NotificationBell to="/officer/notifications" unread={user?.unreadNotifications} />
-            <Avatar name="Tourism Officer" strong />
+            <Link to="/officer/account" className="rounded-full" aria-label="Account settings">
+              <Avatar name="Tourism Officer" strong />
+            </Link>
             <Button variant="secondary" size="sm" onClick={logOut}>
               <LogOut className="h-4 w-4" aria-hidden="true" />
               Log out
@@ -83,7 +84,6 @@ export function OfficerShell() {
         area="Officer portal"
         note="Officer accounts are operated by the Sulyap development team with ACTOP approval."
       />
-      <DevRoleSwitcher />
     </div>
   );
 }

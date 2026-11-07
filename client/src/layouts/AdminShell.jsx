@@ -18,22 +18,27 @@ import { Button } from '@/components/ui/Button';
 import { NotificationBell } from '@/components/shell/NotificationBell';
 import { SkipLink } from '@/components/shell/SkipLink';
 import { SlimFooter } from '@/components/shell/SlimFooter';
-import { DevRoleSwitcher } from '@/components/DevRoleSwitcher';
 import { useSession } from '@/session/SessionContext';
 import { cn } from '@/lib/cn';
+import { useApi } from '@/lib/useApi';
 
-// Admin console navigation. Counts (items waiting for action) arrive with Phase B4.
+// Admin console navigation. `count` names the number of items waiting (GET /admin/counts).
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: LayoutGrid, end: true },
-  { to: '/admin/destinations', label: 'Destinations', icon: MapPin },
-  { to: '/admin/community', label: 'Community Content', icon: MessageSquare },
-  { to: '/admin/reports', label: 'Reports', icon: ClipboardList },
+  { to: '/admin/destinations', label: 'Destinations', icon: MapPin, count: 'destinations' },
+  {
+    to: '/admin/community',
+    label: 'Community Content',
+    icon: MessageSquare,
+    count: 'community',
+  },
+  { to: '/admin/reports', label: 'Reports', icon: ClipboardList, count: 'reports' },
   { to: '/admin/users', label: 'Users', icon: User },
-  { to: '/admin/id-verification', label: 'ID Verification', icon: ShieldCheck },
+  { to: '/admin/id-verification', label: 'ID Verification', icon: ShieldCheck, count: 'ids' },
   { to: '/admin/screening-lists', label: 'Screening Lists', icon: ListChecks },
 ];
 
-function SidebarContent({ user, onLogOut }) {
+function SidebarContent({ user, onLogOut, counts }) {
   return (
     <div className="flex h-full flex-col">
       <div className="px-6 pb-6 pt-7">
@@ -55,18 +60,41 @@ function SidebarContent({ user, onLogOut }) {
               )
             }
           >
-            <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-            {item.label}
+            {({ isActive }) => (
+              <>
+                <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                {item.label}
+                {item.count && counts?.[item.count] > 0 && (
+                  <span
+                    className={cn(
+                      'num ml-auto min-w-[22px] rounded-md px-1.5 text-center text-[12px] font-bold leading-[22px]',
+                      isActive ? 'bg-minty text-forest' : 'bg-minty-100 text-forest',
+                    )}
+                  >
+                    {counts[item.count]}
+                    <span className="sr-only"> waiting</span>
+                  </span>
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
       <div className="space-y-3 border-t border-sage p-4">
         <div className="flex items-center gap-3">
-          <Avatar name={user?.fullName} strong />
-          <div className="min-w-0 flex-1 leading-tight">
-            <p className="truncate text-[14px] font-semibold text-charcoal">{user?.fullName}</p>
-            <p className="text-[12px] text-muted">Administrator</p>
-          </div>
+          <NavLink
+            to="/admin/account"
+            className="flex min-w-0 flex-1 items-center gap-3 rounded-ctl p-1 hover:bg-cream"
+            aria-label="Account settings"
+          >
+            <Avatar name={user?.fullName} strong />
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-[14px] font-semibold text-charcoal">
+                {user?.fullName}
+              </span>
+              <span className="block text-[12px] text-muted">Administrator</span>
+            </span>
+          </NavLink>
           <NotificationBell to="/admin/notifications" unread={user?.unreadNotifications} />
         </div>
         <Button variant="secondary" className="w-full" onClick={onLogOut}>
@@ -79,15 +107,17 @@ function SidebarContent({ user, onLogOut }) {
 }
 
 export function AdminShell() {
-  const { user, setPreviewRole } = useSession();
+  const { user, logout } = useSession();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
+  // Refreshed on every page change, so the numbers follow the work done.
+  const { data: counts } = useApi(`/admin/counts?at=${encodeURIComponent(location.pathname)}`);
 
-  function logOut() {
-    setPreviewRole('guest');
+  async function logOut() {
+    await logout();
     navigate('/login');
   }
 
@@ -95,7 +125,7 @@ export function AdminShell() {
     <div className="flex min-h-screen bg-cream">
       <SkipLink />
       <aside className="sticky top-0 hidden h-screen w-[272px] shrink-0 border-r border-sage bg-surface lg:block">
-        <SidebarContent user={user} onLogOut={logOut} />
+        <SidebarContent user={user} onLogOut={logOut} counts={counts} />
       </aside>
 
       {menuOpen && (
@@ -114,7 +144,7 @@ export function AdminShell() {
             >
               <X className="h-5 w-5" aria-hidden="true" />
             </button>
-            <SidebarContent user={user} onLogOut={logOut} />
+            <SidebarContent user={user} onLogOut={logOut} counts={counts} />
           </aside>
         </div>
       )}
@@ -141,7 +171,6 @@ export function AdminShell() {
           note="Administrator accounts are held by the Sulyap development team."
         />
       </div>
-      <DevRoleSwitcher />
     </div>
   );
 }

@@ -15,16 +15,32 @@
     "db:seed": "node scripts/seed.js",
     "db:seed:demo": "node scripts/seed-demo.js",
     "db:clear:demo": "node scripts/clear-demo.js",
-    "db:check": "node scripts/check-db.js"
+    "db:seed:screening": "node scripts/seed-screening.js",
+    "db:check": "node scripts/check-db.js",
+    "storage:setup": "node scripts/setup-storage.js",
+    "jobs:cleanup-ids": "node scripts/cleanup-ids.js",
+    "test:b1": "node scripts/smoke-b1.js",
+    "test:b2": "node scripts/smoke-b2.js",
+    "test:b3": "node scripts/smoke-b3.js",
+    "test:b4": "node scripts/smoke-b4.js",
+    "test:b5": "node scripts/smoke-b5.js",
+    "test:b6": "node scripts/smoke-b6.js",
+    "test:b7": "node scripts/smoke-b7.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-rate-limit": "^8.7.1",
     "helmet": "^8.0.0",
-    "pg": "^8.13.0"
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.1.0",
+    "pg": "^8.13.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.12"

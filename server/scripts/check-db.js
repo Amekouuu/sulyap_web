@@ -6,6 +6,7 @@ import { pgliteExecutor } from '../db/executor.js';
 import { runMigrations } from '../db/migrate.js';
 import { seedBase } from '../db/seeds/base.js';
 import { seedDemo } from '../db/seeds/demo.js';
+import { seedScreening } from '../db/seeds/screening.js';
 import { clearDemo } from '../db/seeds/clear-demo.js';
 
 const quiet = () => {};
@@ -220,6 +221,15 @@ await check('db:clear:demo removes all demo rows and keeps the setup data', asyn
     'known destinations left',
   );
   expectEqual(await count('SELECT count(*) AS n FROM jurisdictions'), 22, 'jurisdictions left');
+});
+
+console.log('Screening lists');
+await check('researched screening lists load and can run twice', async () => {
+  await seedScreening(db, { log: quiet });
+  await seedScreening(db, { log: quiet });
+  const places = await count('SELECT count(*) AS n FROM known_destinations');
+  const terms = await count('SELECT count(*) AS n FROM prohibited_terms');
+  if (places < 30 || terms < 400) throw new Error(`only ${places} places and ${terms} terms`);
 });
 
 console.log(failures ? `\n${failures} check(s) failed.` : '\nAll checks passed.');

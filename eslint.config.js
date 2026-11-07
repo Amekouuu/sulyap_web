@@ -30,7 +30,15 @@ export default [
         {
           allowConstantExport: true,
           // Context files export their hook next to the provider; that is fine.
-          allowExportNames: ['useToast', 'useSession', 'buttonClasses', 'PREVIEW_USERS'],
+          allowExportNames: [
+            'useToast',
+            'useSession',
+            'buttonClasses',
+            'homePathFor',
+            'safeNextPath',
+            'PageLoading',
+            'GuestOnly',
+          ],
         },
       ],
     },

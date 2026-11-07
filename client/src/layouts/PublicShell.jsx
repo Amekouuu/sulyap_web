@@ -7,7 +7,7 @@ import { Button, ButtonLink } from '@/components/ui/Button';
 import { NotificationBell } from '@/components/shell/NotificationBell';
 import { SiteFooter } from '@/components/shell/SiteFooter';
 import { SkipLink } from '@/components/shell/SkipLink';
-import { DevRoleSwitcher } from '@/components/DevRoleSwitcher';
+import { AccountBanner } from '@/components/shell/AccountBanner';
 import { useSession } from '@/session/SessionContext';
 import { ROLE_LABELS } from '@/constants/status';
 import { cn } from '@/lib/cn';
@@ -31,6 +31,12 @@ const navLinkClass = ({ isActive }) =>
     isActive ? 'bg-minty-50 font-semibold text-forest' : 'text-charcoal hover:bg-cream',
   );
 
+function accountPath(user) {
+  if (user.role === 'administrator') return '/admin/account';
+  if (user.role === 'tourism_officer') return '/officer/account';
+  return '/account';
+}
+
 function notificationsPath(user) {
   if (user.role === 'administrator') return '/admin/notifications';
   if (user.role === 'tourism_officer') return '/officer/notifications';
@@ -38,7 +44,7 @@ function notificationsPath(user) {
 }
 
 function PublicHeader() {
-  const { user, setPreviewRole } = useSession();
+  const { user, logout } = useSession();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,19 +52,25 @@ function PublicHeader() {
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
-  function logOut() {
-    setPreviewRole('guest');
-    navigate('/login');
+  async function logOut() {
+    await logout();
+    navigate('/');
   }
 
   const account = user ? (
     <div className="flex items-center gap-3">
       <NotificationBell to={notificationsPath(user)} unread={user.unreadNotifications} />
-      <Avatar name={user.fullName} strong />
-      <div className="hidden leading-tight xl:block">
-        <p className="text-[14px] font-semibold text-charcoal">{user.fullName}</p>
-        <p className="text-[12px] text-muted">{ROLE_LABELS[user.role]}</p>
-      </div>
+      <Link
+        to={accountPath(user)}
+        className="flex items-center gap-3 rounded-ctl p-1 pr-2 hover:bg-cream"
+        aria-label={`Account settings for ${user.fullName}`}
+      >
+        <Avatar name={user.fullName} strong />
+        <span className="hidden leading-tight xl:block">
+          <span className="block text-[14px] font-semibold text-charcoal">{user.fullName}</span>
+          <span className="block text-[12px] text-muted">{ROLE_LABELS[user.role]}</span>
+        </span>
+      </Link>
       <Button variant="secondary" size="sm" onClick={logOut}>
         <LogOut className="h-4 w-4" aria-hidden="true" />
         Log out
@@ -129,11 +141,11 @@ export function PublicShell() {
     <div className="flex min-h-screen flex-col">
       <SkipLink />
       <PublicHeader />
+      <AccountBanner />
       <main id="main" className="flex-1">
         <Outlet />
       </main>
       <SiteFooter />
-      <DevRoleSwitcher />
     </div>
   );
 }

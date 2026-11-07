@@ -19,7 +19,9 @@
     "db:seed": "npm run db:seed -w server",
     "db:seed:demo": "npm run db:seed:demo -w server",
     "db:clear:demo": "npm run db:clear:demo -w server",
-    "db:check": "npm run db:check -w server"
+    "db:seed:screening": "npm run db:seed:screening -w server",
+    "db:check": "npm run db:check -w server",
+    "storage:setup": "npm run storage:setup -w server"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",

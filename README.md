@@ -39,3 +39,7 @@ the "Preview as" switcher (bottom left) to view the pages as each role.
 - Passwords are hashed with bcrypt (cost 12). Every SQL query uses `$1, $2...` parameters.
 - The browser only talks to the Express API. Supabase keys stay on the server.
 - No AI or machine learning anywhere: all screening is rule-based.
+
+## Guide
+
+Step-by-step use per role (Guest, Registered User, Administrator, Local Tourism Officer): [docs/USER_GUIDE.md](docs/USER_GUIDE.md).
